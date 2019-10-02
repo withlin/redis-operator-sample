@@ -1,2 +1,2 @@
 # redis-operator-sample
-a sample operator for  operator-sdk
+a sample redis operator for  operator-sdk
