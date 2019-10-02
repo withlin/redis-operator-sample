@@ -1,0 +1,7 @@
+apiVersion: redis.ym.com/v1alpha1
+kind: RedisService
+metadata:
+  name: example-redisservice
+spec:
+  # Add fields here
+  size: 3
