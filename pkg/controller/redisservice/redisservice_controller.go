@@ -204,6 +204,7 @@ func newPodForCR(cr *redisv1alpha1.RedisService) *corev1.Pod {
 	}
 }
 
+//缺少OwnerReference，这个有级联删除的作用
 func newServiceForCR(cr *redisv1alpha1.RedisService) *corev1.Service {
 	svc := &corev1.Service{}
 	svcLab := make(map[string]string)
@@ -215,15 +216,22 @@ func newServiceForCR(cr *redisv1alpha1.RedisService) *corev1.Service {
 	}
 	svc.Spec = corev1.ServiceSpec{
 		Ports: []corev1.ServicePort{corev1.ServicePort{Name: "redis",
-			Port: 6379},
+			Port: 6379}, corev1.ServicePort{Name: "redis-cluster",
+			Port: 16379},
 		},
 		Selector:  svcLab,
-		Type:      corev1.ServiceTypeClusterIP,
+		Type:      corev1.ClusterIPNone,
 		ClusterIP: "None",
 	}
 	return svc
 }
 
+//缺点:
+//1.没有指定redis的密码.
+//2.指定volume
+//3.没有指定size
+//4.没有用OwnerReferences
+//5.没有自定义Pod没有指定相关的Affinity，Tolerations，SecurityContext
 func newStatefulSetForCR(cr *redisv1alpha1.RedisService) *appsv1beta1.StatefulSet {
 	stat := &appsv1beta1.StatefulSet{
 		TypeMeta:   v1.TypeMeta{},
